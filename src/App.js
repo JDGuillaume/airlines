@@ -1,27 +1,54 @@
 import { useEffect, useState } from 'react';
-import { routes, airlines } from './data';
+import { routes, airlines, airports } from './data';
 import './App.css';
 import Table from './components/Table';
 import Select from './components/Select';
 
 const App = () => {
   const [filteredRoutes, setFilteredRoutes] = useState([]);
+  const [filteredAirline, setFilteredAirline] = useState('all');
+  const [filteredAirports, setFilteredAirports] = useState('all');
 
   useEffect(() => {
     setFilteredRoutes(routes);
   }, []);
 
-  const handleSelection = event => {
-    let value = event.target.value;
+  const handleAirlineSelection = event => {
+    let value = Number(event.target.value);
+    setFilteredAirline(value);
 
-    if (value !== 'all') {
-      setFilteredRoutes(
-        routes.filter(route => route.airline === Number(value))
-      );
-      return;
+    if (filteredAirports === 'all') {
+      let updatedRoutes = routes.filter(route => {
+        return route.airline === value;
+      });
+
+      setFilteredRoutes(updatedRoutes);
+    } else {
+      let updatedRoutes = filteredRoutes.filter(route => {
+        return route.airline === value;
+      });
+
+      setFilteredRoutes(updatedRoutes);
     }
+  };
 
-    setFilteredRoutes(routes);
+  const handleAirportSelection = event => {
+    let value = String(event.target.value);
+    setFilteredAirports(value);
+
+    if (filteredAirline === 'all') {
+      let updatedRoutes = routes.filter(route => {
+        return route.src === value || route.dest === value;
+      });
+
+      setFilteredRoutes(updatedRoutes);
+    } else {
+      let updatedRoutes = filteredRoutes.filter(route => {
+        return route.src === value || route.dest === value;
+      });
+
+      setFilteredRoutes(updatedRoutes);
+    }
   };
 
   return (
@@ -33,7 +60,23 @@ const App = () => {
         <p>Welcome to the app!</p>
       </section>
       <section>
-        <Select options={airlines} onSelect={handleSelection} />
+        <form>
+          Show routes on
+          <Select
+            options={airlines}
+            type="Airlines"
+            onSelect={handleAirlineSelection}
+            keyValue="id"
+          />{' '}
+          fly in or out of{' '}
+          <Select
+            options={airports}
+            type="Airports"
+            onSelect={handleAirportSelection}
+            keyValue="code"
+          />
+          <button type="reset">Show All Routes</button>
+        </form>
         <Table className="routes-table" perPage={25} routes={filteredRoutes} />
       </section>
     </div>

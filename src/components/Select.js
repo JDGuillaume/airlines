@@ -1,18 +1,15 @@
-const Filter = ({ options, onSelect }) => {
+const Filter = ({ options, onSelect, type, keyValue }) => {
   return (
-    <>
-      <label>Filter by Airline</label>
-      <select onChange={onSelect}>
-        <option value="all" key="all">
-          All Airlines
+    <select defaultValue="all" onChange={onSelect}>
+      <option value="all" key="all">
+        All {type}
+      </option>
+      {options.map(option => (
+        <option value={option[keyValue]} key={option[keyValue]}>
+          {option.name}
         </option>
-        {options.map(option => (
-          <option value={option.id} key={option.id}>
-            {option.name}
-          </option>
-        ))}
-      </select>
-    </>
+      ))}
+    </select>
   );
 };
 
