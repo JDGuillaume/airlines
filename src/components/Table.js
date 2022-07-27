@@ -62,8 +62,13 @@ const Table = ({ className, perPage, routes }) => {
         </tbody>
       </table>
       <p>
-        Showing {startIndex === 0 ? startIndex + 1 : startIndex}-
-        {endIndex <= numberOfRoutes ? endIndex + 1 : numberOfRoutes} of{' '}
+        Showing{' '}
+        {numberOfRoutes === 0
+          ? 0
+          : startIndex === 0
+          ? startIndex + 1
+          : startIndex}
+        -{endIndex <= numberOfRoutes ? endIndex + 1 : numberOfRoutes} of{' '}
         {numberOfRoutes} routes.
       </p>
       <button

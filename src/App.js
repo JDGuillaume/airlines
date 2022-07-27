@@ -35,8 +35,14 @@ const App = () => {
       );
       setFilteredRoutes(updatedRoutes);
     } else {
-      let updatedRoutes = filteredRoutes.filter(route => {
+      let updatedRoutes = routes.filter(route => {
         return route.airline === value;
+      });
+
+      updatedRoutes = updatedRoutes.filter(route => {
+        return (
+          route.src === filteredAirports || route.dest === filteredAirports
+        );
       });
 
       setFilteredRoutes(updatedRoutes);
@@ -61,8 +67,12 @@ const App = () => {
       });
       setFilteredRoutes(updatedRoutes);
     } else {
-      let updatedRoutes = filteredRoutes.filter(route => {
+      let updatedRoutes = routes.filter(route => {
         return route.src === value || route.dest === value;
+      });
+
+      updatedRoutes = updatedRoutes.filter(route => {
+        return route.airline === filteredAirline;
       });
 
       setFilteredRoutes(updatedRoutes);
