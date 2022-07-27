@@ -114,7 +114,7 @@ const App = () => {
     setFilteredRoutes(routes);
   };
 
-  let test = filterAirlineToAirports(filteredAirline);
+  let validAirports = filterAirlineToAirports(filteredAirline);
   let validAirlines = filterAirportsToAirline(filteredAirportCode);
 
   return (
@@ -138,7 +138,7 @@ const App = () => {
           fly in or out of{' '}
           <Select
             allOptions={airports}
-            validOptions={test}
+            validOptions={validAirports}
             type="Airports"
             onSelect={handleAirportSelection}
             keyValue="code"

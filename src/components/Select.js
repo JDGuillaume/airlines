@@ -1,5 +1,14 @@
 const Filter = ({ allOptions, onSelect, type, keyValue, validOptions }) => {
-  console.log('Valid Options', validOptions);
+  allOptions.sort((a, b) => {
+    if (a.name > b.name) {
+      return 1;
+    } else if (b.name > a.name) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
+
   return (
     <select defaultValue="all" onChange={onSelect}>
       <option value="all" key="all">
