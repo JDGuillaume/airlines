@@ -6,22 +6,33 @@ import Select from './components/Select';
 
 const App = () => {
   const [filteredRoutes, setFilteredRoutes] = useState([]);
-  const [filteredAirline, setFilteredAirline] = useState('all');
-  const [filteredAirports, setFilteredAirports] = useState('all');
+  const [filteredAirline, setFilteredAirline] = useState('');
+  const [filteredAirports, setFilteredAirports] = useState('');
 
   useEffect(() => {
     setFilteredRoutes(routes);
+    setFilteredAirports('all');
+    setFilteredAirline('all');
   }, []);
 
   const handleAirlineSelection = event => {
     let value = Number(event.target.value);
+    if (Number.isNaN(value)) value = 'all';
     setFilteredAirline(value);
 
-    if (filteredAirports === 'all') {
+    if (value === 'all' && filteredAirports === 'all') {
+      setFilteredRoutes(routes);
+    } else if (filteredAirports === 'all') {
       let updatedRoutes = routes.filter(route => {
         return route.airline === value;
       });
 
+      setFilteredRoutes(updatedRoutes);
+    } else if (value === 'all') {
+      let updatedRoutes = routes.filter(
+        route =>
+          route.src === filteredAirports || route.dest === filteredAirports
+      );
       setFilteredRoutes(updatedRoutes);
     } else {
       let updatedRoutes = filteredRoutes.filter(route => {
@@ -34,13 +45,21 @@ const App = () => {
 
   const handleAirportSelection = event => {
     let value = String(event.target.value);
+    console.log(value);
     setFilteredAirports(value);
 
-    if (filteredAirline === 'all') {
+    if (filteredAirline === 'all' && value === 'all') {
+      setFilteredRoutes(routes);
+    } else if (filteredAirline === 'all') {
       let updatedRoutes = routes.filter(route => {
         return route.src === value || route.dest === value;
       });
 
+      setFilteredRoutes(updatedRoutes);
+    } else if (value === 'all') {
+      let updatedRoutes = routes.filter(route => {
+        return route.airline === filteredAirline;
+      });
       setFilteredRoutes(updatedRoutes);
     } else {
       let updatedRoutes = filteredRoutes.filter(route => {
