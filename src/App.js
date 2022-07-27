@@ -45,7 +45,6 @@ const App = () => {
 
   const handleAirportSelection = event => {
     let value = String(event.target.value);
-    console.log(value);
     setFilteredAirports(value);
 
     if (filteredAirline === 'all' && value === 'all') {
@@ -68,6 +67,10 @@ const App = () => {
 
       setFilteredRoutes(updatedRoutes);
     }
+  };
+
+  const handleReset = () => {
+    setFilteredRoutes(routes);
   };
 
   return (
@@ -94,7 +97,9 @@ const App = () => {
             onSelect={handleAirportSelection}
             keyValue="code"
           />
-          <button type="reset">Show All Routes</button>
+          <button type="reset" onClick={handleReset}>
+            Show All Routes
+          </button>
         </form>
         <Table className="routes-table" perPage={25} routes={filteredRoutes} />
       </section>
