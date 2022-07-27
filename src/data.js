@@ -3873,5 +3873,3 @@ export const airports = [
   },
   { code: 'BGG', name: 'Bingöl Airport', lat: 38.861111, long: 40.5925 },
 ];
-
-export default { routes, airlines, airports };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { airlines, airports, routes } from '../data';
+import { airlines, airports } from '../data';
 
 const getAirlineById = id => {
   return airlines.find(airline => airline.id === id).name;
@@ -9,7 +9,7 @@ const getAirportByCode = code => {
   return airports.find(airport => airport.code === code).name;
 };
 
-const Table = ({ className, perPage }) => {
+const Table = ({ className, perPage, routes }) => {
   const [routeSelection, setRouteSelection] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(perPage - 1);
@@ -18,7 +18,12 @@ const Table = ({ className, perPage }) => {
   useEffect(() => {
     const routesPart = routes.slice(startIndex, endIndex + 1);
     setRouteSelection(routesPart);
-  }, [startIndex, endIndex, perPage]);
+  }, [routes, startIndex, endIndex, perPage]);
+
+  useEffect(() => {
+    setStartIndex(0);
+    setEndIndex(perPage - 1);
+  }, [routes, perPage]);
 
   const prevButtonStatus = startIndex === 0 ? true : false;
   const nextButtonStatus =
