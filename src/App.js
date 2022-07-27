@@ -7,11 +7,11 @@ import Select from './components/Select';
 const App = () => {
   const [filteredRoutes, setFilteredRoutes] = useState([]);
   const [filteredAirline, setFilteredAirline] = useState('');
-  const [filteredAirports, setFilteredAirports] = useState('');
+  const [filteredAirportCode, setFilteredAirportCode] = useState('');
 
   useEffect(() => {
     setFilteredRoutes(routes);
-    setFilteredAirports('all');
+    setFilteredAirportCode('all');
     setFilteredAirline('all');
   }, []);
 
@@ -20,9 +20,9 @@ const App = () => {
     if (Number.isNaN(value)) value = 'all';
     setFilteredAirline(value);
 
-    if (value === 'all' && filteredAirports === 'all') {
+    if (value === 'all' && filteredAirportCode === 'all') {
       setFilteredRoutes(routes);
-    } else if (filteredAirports === 'all') {
+    } else if (filteredAirportCode === 'all') {
       let updatedRoutes = routes.filter(route => {
         return route.airline === value;
       });
@@ -31,7 +31,8 @@ const App = () => {
     } else if (value === 'all') {
       let updatedRoutes = routes.filter(
         route =>
-          route.src === filteredAirports || route.dest === filteredAirports
+          route.src === filteredAirportCode ||
+          route.dest === filteredAirportCode
       );
       setFilteredRoutes(updatedRoutes);
     } else {
@@ -41,7 +42,8 @@ const App = () => {
 
       updatedRoutes = updatedRoutes.filter(route => {
         return (
-          route.src === filteredAirports || route.dest === filteredAirports
+          route.src === filteredAirportCode ||
+          route.dest === filteredAirportCode
         );
       });
 
@@ -51,7 +53,7 @@ const App = () => {
 
   const handleAirportSelection = event => {
     let value = String(event.target.value);
-    setFilteredAirports(value);
+    setFilteredAirportCode(value);
 
     if (filteredAirline === 'all' && value === 'all') {
       setFilteredRoutes(routes);
@@ -79,9 +81,41 @@ const App = () => {
     }
   };
 
+  let filterAirportsToAirline = code => {
+    if (code === 'all') {
+      return routes.map(route => route.airline);
+    } else {
+      let data = routes;
+      data = data.filter(route => route.src === code || route.dest === code);
+      return data.map(route => route.airline);
+    }
+  };
+
+  let filterAirlineToAirports = id => {
+    if (id === 'all') {
+      return airports.map(airport => airport.code);
+    } else {
+      let data = routes;
+      data = data.filter(route => route.airline === id);
+
+      const sources = data.map(route => route.src);
+      const destinations = data.map(route => route.dest);
+
+      let testAirports = airports.filter(
+        airport =>
+          sources.includes(airport.code) || destinations.includes(airport.code)
+      );
+
+      return testAirports.map(airport => airport.code);
+    }
+  };
+
   const handleReset = () => {
     setFilteredRoutes(routes);
   };
+
+  let test = filterAirlineToAirports(filteredAirline);
+  let validAirlines = filterAirportsToAirline(filteredAirportCode);
 
   return (
     <div className="app">
@@ -95,14 +129,16 @@ const App = () => {
         <form>
           Show routes on
           <Select
-            options={airlines}
+            validOptions={validAirlines}
+            allOptions={airlines}
             type="Airlines"
             onSelect={handleAirlineSelection}
             keyValue="id"
           />{' '}
           fly in or out of{' '}
           <Select
-            options={airports}
+            allOptions={airports}
+            validOptions={test}
             type="Airports"
             onSelect={handleAirportSelection}
             keyValue="code"
